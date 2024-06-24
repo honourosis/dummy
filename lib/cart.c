@@ -1,17 +1,16 @@
-#include <stdio.h>
-#include <stdbool.h>
-#include <stdlib.h>
 #include "cart.h"
 
 #define F_MODE_READONLY_BINARY "rb"
 #define HEADER_START 0x100
 
-bool is_checksum_valid(Cartridge *cartridge) {
+Cartridge cartridge = {};
+
+bool is_checksum_valid() {
     uint8_t checksum = 0;
     for (uint16_t address = 0x0134; address <= 0x014C; address++) {
-        checksum = checksum - cartridge->rom[address] - 1;
+        checksum = checksum - cartridge.rom[address] - 1;
     }
-    return cartridge->header->header_checksum == checksum;
+    return cartridge.header->header_checksum == checksum;
 }
 
 void print_header(Header *header) {
@@ -27,7 +26,7 @@ void print_header(Header *header) {
     printf("Global checksum: %i\n", header->global_checksum);
 }
 
-bool read_cartridge(char *romPath, Cartridge *cartridge) {
+bool read_cartridge(char *romPath) {
     FILE *file = fopen(romPath, F_MODE_READONLY_BINARY);
     if (file == NULL) {
         return false;
@@ -45,8 +44,19 @@ bool read_cartridge(char *romPath, Cartridge *cartridge) {
     }
     fclose(file);
 
-    cartridge->rom_size = file_size;
-    cartridge->rom = rom;
-    cartridge->header = (Header *) (cartridge->rom + HEADER_START);
+    cartridge.rom_size = file_size;
+    cartridge.rom = rom;
+    cartridge.header = (Header *) (cartridge.rom + HEADER_START);
+
+    if (!is_checksum_valid()) {
+        printf("Calculated and expected cartridge checksums did not match.");
+        return false;
+    }
+
+    print_header(cartridge.header);
     return true;
+}
+
+uint8_t lookup_card_data(uint16_t address) {
+    return cartridge.rom[address];
 }

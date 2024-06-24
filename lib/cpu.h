@@ -1,4 +1,7 @@
-#include <stdint.h>
+#pragma once
+
+#include "common.h"
+#include "instruction.h"
 
 typedef struct {
     uint8_t A;
@@ -8,10 +11,13 @@ typedef struct {
     uint8_t E;
     uint8_t H;
     uint8_t L;
+    uint16_t SP;
+    uint16_t PC;
 } Registers;
 
 typedef struct {
     Registers registers;
-    uint8_t stack_pointer;
-    uint8_t program_counter;
-} Cpu;
+    Instruction *current_instruction;
+} CPU;
+
+void cpu_step();

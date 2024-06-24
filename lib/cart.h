@@ -1,4 +1,6 @@
-#include <stdint.h>
+#pragma once
+
+#include "common.h"
 
 typedef struct {
     uint8_t entry[4];
@@ -22,8 +24,9 @@ typedef struct {
     Header *header;
 } Cartridge;
 
-bool is_checksum_valid(Cartridge *cartridge);
-
-bool read_cartridge(char *romPath, Cartridge *cartridge);
+bool read_cartridge(char *romPath);
 
 void print_header(Header *header);
+
+uint8_t lookup_card_data(uint16_t address);
+

@@ -11,4 +11,11 @@ add_executable(dummy app/main.c
         lib/cart.c
         lib/cart.h
         lib/cpu.h
+        lib/instruction.h
+        lib/instruction.c
+        lib/cpu.c
+        lib/mem.h
+        lib/common.h
+        lib/mem.c
+        lib/common.c
 )
