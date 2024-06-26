@@ -1,2 +1,6 @@
 /cmake-build-debug/
 /.idea/
+/tools/cim/.idea/
+/tools/cim/gradlew
+/tools/cim/gradlew.bat
+/tools/cim/gradle/wrapper/gradle-wrapper.jar
