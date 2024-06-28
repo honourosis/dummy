@@ -34,6 +34,10 @@ typedef enum {
     INS_RST,
     INS_PREFIX,
     INS_LDH,
+    INS_ADC,
+    INS_RETI,
+    INS_DI,
+    INS_EI,
     INS_EL
 } Type;
 
@@ -51,7 +55,16 @@ typedef enum {
     ADD_REG_N8,
     ADD_REG_N16,
     ADD_REG_A8,
-    ADD_REG_A16
+    ADD_ADDR,
+    ADD_REG_A16,
+    ADD_NZ,
+    ADD_NZ_A16,
+    ADD_A16,
+    ADD_A16_REG,
+    ADD_Z_A16,
+    ADD_Z,
+    ADD_N8,
+    ADD_E8
 } Addressing;
 
 typedef enum {
