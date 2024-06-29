@@ -1,134 +1,175 @@
 #include "executor.h"
 
-void exec_and(CPU_context *context) {
+/**
+ *     FL_ZERO,
+    FL_NSUB,
+    FL_HALT,
+    FL_CARRY
+
+ * @param ctx
+ * @param flag_z
+ */
+
+void set_flags(CPU_context *ctx, int8_t zero, int8_t nsub, int8_t halt, int8_t carry) {
+    if (zero != -1) {
+        ctx->cpu.registers.L = set_bit_at_index(ctx->cpu.registers.L, 7, zero);
+    }
+    if (nsub != -1) {
+        ctx->cpu.registers.L = set_bit_at_index(ctx->cpu.registers.L, 6, nsub);
+    }
+    if (halt != -1) {
+        ctx->cpu.registers.L = set_bit_at_index(ctx->cpu.registers.L, 5, halt);
+    }
+    if (carry != -1) {
+        ctx->cpu.registers.L = set_bit_at_index(ctx->cpu.registers.L, 4, carry);
+    }
+}
+
+void exec_and(CPU_context *ctx) {
     TODO
 }
 
-void exec_add(CPU_context *context) {
+void exec_add(CPU_context *ctx) {
     TODO
 }
 
-void exec_ld(CPU_context *context) {
+void exec_ld(CPU_context *ctx) {
+    Addressing addressing = ctx->instruction->addressing;
+    if (addressing == ADD_REG_REG) {
+        set_8bit_register_val(ctx->instruction->reg_1, ctx->operand_two);
+    } else {
+        TODO
+    }
+}
+
+void exec_xor(CPU_context *ctx) {
     TODO
 }
 
-void exec_xor(CPU_context *context) {
+void exec_rrca(CPU_context *ctx) {
     TODO
 }
 
-void exec_rrca(CPU_context *context) {
+void exec_dec(CPU_context *ctx) {
     TODO
 }
 
-void exec_dec(CPU_context *context) {
+void exec_inc(CPU_context *ctx) {
     TODO
 }
 
-void exec_inc(CPU_context *context) {
+void exec_rlca(CPU_context *ctx) {
     TODO
 }
 
-void exec_rlca(CPU_context *context) {
+void exec_nop(CPU_context *ctx) {
+    // nothing to do
+}
+
+void exec_or(CPU_context *ctx) {
     TODO
 }
 
-void exec_nop(CPU_context *context) {
+// can be executed only for register A
+void exec_cp(CPU_context *ctx) {
+    int8_t n = (int8_t) ctx->cpu.registers.A - (int8_t) ctx->operand_one;
+    int8_t halt = ((int8_t) ctx->cpu.registers.A & 0x0F) - ((int8_t) ctx->operand_one & 0x0F) < 0;
+    set_flags(ctx, n == 0, 1, halt, n < 0);
+}
+
+void exec_rra(CPU_context *ctx) {
     TODO
 }
 
-void exec_or(CPU_context *context) {
+void exec_stop(CPU_context *ctx) {
     TODO
 }
 
-void exec_cp(CPU_context *context) {
+void exec_jr(CPU_context *ctx) {
     TODO
 }
 
-void exec_rra(CPU_context *context) {
+void exec_rla(CPU_context *ctx) {
     TODO
 }
 
-void exec_stop(CPU_context *context) {
+void exec_jp(CPU_context *ctx) {
+    Addressing addressing = ctx->instruction->addressing;
+    if (addressing == ADD_REG) {
+        ctx->cpu.registers.PC = ctx->operand_one;
+    } else if (addressing == ADD_A16) {
+        ctx->cpu.registers.PC = ctx->operand_one;
+    } else {
+        printf("Not implemented! exec_jp for %x", addressing);
+        TODO
+    }
+}
+
+void exec_pop(CPU_context *ctx) {
     TODO
 }
 
-void exec_jr(CPU_context *context) {
+void exec_ret(CPU_context *ctx) {
     TODO
 }
 
-void exec_rla(CPU_context *context) {
+void exec_cpl(CPU_context *ctx) {
     TODO
 }
 
-void exec_jp(CPU_context *context) {
+void exec_rst(CPU_context *ctx) {
     TODO
 }
 
-void exec_pop(CPU_context *context) {
+void exec_push(CPU_context *ctx) {
     TODO
 }
 
-void exec_ret(CPU_context *context) {
+void exec_call(CPU_context *ctx) {
     TODO
 }
 
-void exec_cpl(CPU_context *context) {
+void exec_daa(CPU_context *ctx) {
     TODO
 }
 
-void exec_rst(CPU_context *context) {
+void exec_reti(CPU_context *ctx) {
     TODO
 }
 
-void exec_push(CPU_context *context) {
+void exec_ccf(CPU_context *ctx) {
     TODO
 }
 
-void exec_call(CPU_context *context) {
+void exec_sub(CPU_context *ctx) {
     TODO
 }
 
-void exec_daa(CPU_context *context) {
+void exec_scf(CPU_context *ctx) {
     TODO
 }
 
-void exec_reti(CPU_context *context) {
+void exec_adc(CPU_context *ctx) {
     TODO
 }
 
-void exec_ccf(CPU_context *context) {
+void exec_ldh(CPU_context *ctx) {
     TODO
 }
 
-void exec_sub(CPU_context *context) {
+void exec_sbc(CPU_context *ctx) {
     TODO
 }
 
-void exec_scf(CPU_context *context) {
+void exec_di(CPU_context *ctx) {
     TODO
 }
 
-void exec_adc(CPU_context *context) {
+void exec_ei(CPU_context *ctx) {
     TODO
 }
 
-void exec_ldh(CPU_context *context) {
-    TODO
-}
-
-void exec_sbc(CPU_context *context) {
-    TODO
-}
-
-void exec_di(CPU_context *context) {
-    TODO
-}
-
-void exec_ei(CPU_context *context) {
-    TODO
-}
-
-void exec_halt(CPU_context *context) {
+void exec_halt(CPU_context *ctx) {
     TODO
 }
 

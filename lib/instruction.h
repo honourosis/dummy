@@ -2,6 +2,15 @@
 
 #include "common.h"
 
+/**
+ * Any of the 8-bit registers (A, B, C, D, E, H, L) r8
+ * Any of the general-purpose 16-bit registers (BC, DE, HL). r16
+ * 8-bit integer constant. n8
+ * 16-bit integer constant. n16
+ * 8-bit offset (-128 to 127). e8
+ * 3-bit unsigned integer constant (0 to 7). u3
+ */
+
 typedef enum {
     // un-prefixed instructions
     INS_NOP,
@@ -82,13 +91,12 @@ typedef enum {
     REG_E,
     REG_H,
     REG_L,
-    //r16
+    REG_SP,
+    REG_PC,
     REG_AF,
     REG_BC,
     REG_DE,
-    REG_HL,
-    REG_PC,
-    REG_SP
+    REG_HL
 } Register;
 
 typedef struct {

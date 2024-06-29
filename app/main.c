@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "cli.h"
 #include "../lib/emu.h"
 
