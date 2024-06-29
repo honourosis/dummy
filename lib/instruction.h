@@ -38,7 +38,6 @@ typedef enum {
     INS_RETI,
     INS_DI,
     INS_EI,
-    INS_EL
 } Type;
 
 typedef enum {

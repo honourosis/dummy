@@ -1,15 +1,9 @@
 #include "cpu.h"
 #include "mem.h"
-
-typedef struct {
-    uint8_t opcode;
-    Instruction *instruction;
-    uint16_t operand_one;
-    uint16_t operand_two;
-} context;
+#include "executor.h"
 
 CPU cpu = {};
-context ctx = {};
+CPU_context ctx = {};
 
 uint16_t get_8bit_register_val(Register reg) {
     switch (reg) {
@@ -75,13 +69,85 @@ void next_data() {
             cpu.registers.PC += 2;
             ctx.operand_two = join_8b_16b(low_bytes, high_bytes);
             return;
+        case ADD_REG_A8:
+            ctx.operand_one = get_8bit_register_val(ctx.instruction->reg_1);
+            ctx.operand_two = read_mem(cpu.registers.PC);
+            cpu.registers.PC += 1;
+            break;
+        case ADD_ADDR:
+            ctx.operand_one = read_mem(cpu.registers.PC);
+            cpu.registers.PC += 1;
+            break;
+        case ADD_REG_A16:
+            ctx.operand_one = get_8bit_register_val(ctx.instruction->reg_1);
+            ctx.operand_two = swap_int16(
+                    join_8b_16b(
+                            read_mem(cpu.registers.PC),
+                            read_mem(cpu.registers.PC + 1)
+                    )
+            );
+            cpu.registers.PC += 2;
+            break;
+        case ADD_NZ:
+            printf("Addressing for ADD_NZ!\n");
+            break;
+        case ADD_NZ_A16:
+            ctx.operand_two = swap_int16(
+                    join_8b_16b(
+                            read_mem(cpu.registers.PC),
+                            read_mem(cpu.registers.PC + 1)
+                    )
+            );
+            cpu.registers.PC += 2;
+            break;
+        case ADD_A16:
+            ctx.operand_one = swap_int16(
+                    join_8b_16b(
+                            read_mem(cpu.registers.PC),
+                            read_mem(cpu.registers.PC + 1)
+                    )
+            );
+            cpu.registers.PC += 2;
+            break;
+        case ADD_A16_REG:
+            ctx.operand_one = swap_int16(
+                    join_8b_16b(
+                            read_mem(cpu.registers.PC),
+                            read_mem(cpu.registers.PC + 1)
+                    )
+            );
+            cpu.registers.PC += 2;
+            ctx.operand_two = get_8bit_register_val(ctx.instruction->reg_1);
+            break;
+        case ADD_Z_A16:
+            ctx.operand_two = swap_int16(
+                    join_8b_16b(
+                            read_mem(cpu.registers.PC),
+                            read_mem(cpu.registers.PC + 1)
+                    )
+            );
+            cpu.registers.PC += 2;
+            break;
+        case ADD_Z:
+            printf("Addressing for ADD_Z!\n");
+            break;
+        case ADD_N8:
+            ctx.operand_one = read_mem(cpu.registers.PC);
+            cpu.registers.PC += 1;
+            break;
+        case ADD_E8:
+            printf("Addressing for ADD_E8!\n");
+            break;
         default:
-        TODO
+            printf("Addressing for '%02x' not implemented!\n", cpu.current_instruction->addressing);
     }
 }
 
 void execute() {
-    printf("Opcode: %02x; SP: %i, PC: %i\n", ctx.opcode, cpu.registers.SP, cpu.registers.PC);
+    printf("Opcode (%u): %02x; SP: %i, PC: %i\n", ctx.instruction->type, ctx.opcode, cpu.registers.SP,
+           cpu.registers.PC);
+    Executor executor = lookup_executor(ctx.instruction);
+    executor(&ctx);
 }
 
 void cpu_step() {

@@ -4,6 +4,13 @@
 #include "instruction.h"
 
 typedef struct {
+    uint8_t opcode;
+    Instruction *instruction;
+    uint16_t operand_one;
+    uint16_t operand_two;
+} CPU_context;
+
+typedef struct {
     uint8_t A;
     uint8_t B;
     uint8_t C;

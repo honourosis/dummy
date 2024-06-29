@@ -18,4 +18,6 @@ add_executable(dummy app/main.c
         lib/common.h
         lib/mem.c
         lib/common.c
+        lib/executor.c
+        lib/executor.h
 )
