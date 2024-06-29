@@ -12,16 +12,16 @@
 
 void set_flags(CPU_context *ctx, int8_t zero, int8_t nsub, int8_t halt, int8_t carry) {
     if (zero != -1) {
-        ctx->cpu.registers.L = set_bit_at_index(ctx->cpu.registers.L, 7, zero);
+        ctx->registers.L = set_bit_at_index(ctx->registers.L, 7, zero);
     }
     if (nsub != -1) {
-        ctx->cpu.registers.L = set_bit_at_index(ctx->cpu.registers.L, 6, nsub);
+        ctx->registers.L = set_bit_at_index(ctx->registers.L, 6, nsub);
     }
     if (halt != -1) {
-        ctx->cpu.registers.L = set_bit_at_index(ctx->cpu.registers.L, 5, halt);
+        ctx->registers.L = set_bit_at_index(ctx->registers.L, 5, halt);
     }
     if (carry != -1) {
-        ctx->cpu.registers.L = set_bit_at_index(ctx->cpu.registers.L, 4, carry);
+        ctx->registers.L = set_bit_at_index(ctx->registers.L, 4, carry);
     }
 }
 
@@ -72,8 +72,8 @@ void exec_or(CPU_context *ctx) {
 
 // can be executed only for register A
 void exec_cp(CPU_context *ctx) {
-    int8_t n = (int8_t) ctx->cpu.registers.A - (int8_t) ctx->operand_one;
-    int8_t halt = ((int8_t) ctx->cpu.registers.A & 0x0F) - ((int8_t) ctx->operand_one & 0x0F) < 0;
+    int8_t n = (int8_t) ctx->registers.A - (int8_t) ctx->operand_one;
+    int8_t halt = ((int8_t) ctx->registers.A & 0x0F) - ((int8_t) ctx->operand_one & 0x0F) < 0;
     set_flags(ctx, n == 0, 1, halt, n < 0);
 }
 
@@ -96,9 +96,9 @@ void exec_rla(CPU_context *ctx) {
 void exec_jp(CPU_context *ctx) {
     Addressing addressing = ctx->instruction->addressing;
     if (addressing == ADD_REG) {
-        ctx->cpu.registers.PC = ctx->operand_one;
+        ctx->registers.PC = ctx->operand_one;
     } else if (addressing == ADD_A16) {
-        ctx->cpu.registers.PC = ctx->operand_one;
+        ctx->registers.PC = ctx->operand_one;
     } else {
         printf("Not implemented! exec_jp for %x", addressing);
         TODO

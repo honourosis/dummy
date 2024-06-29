@@ -17,15 +17,11 @@ typedef struct {
 } Registers;
 
 typedef struct {
-    Registers registers;
-} CPU;
-
-typedef struct {
     uint8_t opcode;
     uint16_t operand_one;
     uint16_t operand_two;
-    CPU cpu;
     Instruction *instruction;
+    Registers registers;
 } CPU_context;
 
 void cpu_step();

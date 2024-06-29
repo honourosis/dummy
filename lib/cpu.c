@@ -7,25 +7,25 @@ CPU_context ctx = {};
 void set_8bit_register_val(Register reg, uint8_t val) {
     switch (reg) {
         case REG_A:
-            ctx.cpu.registers.A = val;
+            ctx.registers.A = val;
             break;
         case REG_B:
-            ctx.cpu.registers.B = val;
+            ctx.registers.B = val;
             break;
         case REG_C:
-            ctx.cpu.registers.C = val;
+            ctx.registers.C = val;
             break;
         case REG_D:
-            ctx.cpu.registers.D = val;
+            ctx.registers.D = val;
             break;
         case REG_E:
-            ctx.cpu.registers.E = val;
+            ctx.registers.E = val;
             break;
         case REG_H:
-            ctx.cpu.registers.H = val;
+            ctx.registers.H = val;
             break;
         case REG_L:
-            ctx.cpu.registers.L = val;
+            ctx.registers.L = val;
             break;
         default:
         TODO;
@@ -35,36 +35,36 @@ void set_8bit_register_val(Register reg, uint8_t val) {
 uint16_t get_register_val(Register reg) {
     switch (reg) {
         case REG_A:
-            return ctx.cpu.registers.A;
+            return ctx.registers.A;
         case REG_B:
-            return ctx.cpu.registers.B;
+            return ctx.registers.B;
         case REG_C:
-            return ctx.cpu.registers.C;
+            return ctx.registers.C;
         case REG_D:
-            return ctx.cpu.registers.D;
+            return ctx.registers.D;
         case REG_E:
-            return ctx.cpu.registers.E;
+            return ctx.registers.E;
         case REG_H:
-            return ctx.cpu.registers.H;
+            return ctx.registers.H;
         case REG_L:
-            return ctx.cpu.registers.L;
+            return ctx.registers.L;
         case REG_AF:
         TODO
         case REG_HL:
-            return join_8b_16b(ctx.cpu.registers.H, ctx.cpu.registers.L);
+            return join_8b_16b(ctx.registers.H, ctx.registers.L);
         case REG_BC:
-            return join_8b_16b(ctx.cpu.registers.B, ctx.cpu.registers.C);
+            return join_8b_16b(ctx.registers.B, ctx.registers.C);
         case REG_DE:
-            return join_8b_16b(ctx.cpu.registers.D, ctx.cpu.registers.E);
+            return join_8b_16b(ctx.registers.D, ctx.registers.E);
         case REG_PC:
-            return ctx.cpu.registers.PC;
+            return ctx.registers.PC;
         case REG_SP:
-            return ctx.cpu.registers.SP;
+            return ctx.registers.SP;
     }
 }
 
 void next_instruction() {
-    ctx.opcode = read_mem(ctx.cpu.registers.PC++);
+    ctx.opcode = read_mem(ctx.registers.PC++);
     ctx.instruction = lookup_instruction(ctx.opcode);
     if (ctx.instruction == NULL) {
         printf("Unknown instruction: %02x", ctx.opcode);
@@ -85,34 +85,34 @@ void next_data() {
             return;
         case ADD_REG_N8:
             ctx.operand_one = get_register_val(ctx.instruction->reg_1);
-            ctx.operand_two = read_mem(ctx.cpu.registers.PC);
-            ctx.cpu.registers.PC++;
+            ctx.operand_two = read_mem(ctx.registers.PC);
+            ctx.registers.PC++;
             return;
         case ADD_REG_N16:
             ctx.operand_one = get_register_val(ctx.instruction->reg_1);
-            uint8_t low_bytes = read_mem(ctx.cpu.registers.PC);
-            uint8_t high_bytes = read_mem(ctx.cpu.registers.PC + 1);
-            ctx.cpu.registers.PC += 2;
+            uint8_t low_bytes = read_mem(ctx.registers.PC);
+            uint8_t high_bytes = read_mem(ctx.registers.PC + 1);
+            ctx.registers.PC += 2;
             ctx.operand_two = join_8b_16b(low_bytes, high_bytes);
             return;
         case ADD_REG_A8:
             ctx.operand_one = get_register_val(ctx.instruction->reg_1);
-            ctx.operand_two = read_mem(ctx.cpu.registers.PC);
-            ctx.cpu.registers.PC += 1;
+            ctx.operand_two = read_mem(ctx.registers.PC);
+            ctx.registers.PC += 1;
             break;
         case ADD_ADDR:
-            ctx.operand_one = read_mem(ctx.cpu.registers.PC);
-            ctx.cpu.registers.PC += 1;
+            ctx.operand_one = read_mem(ctx.registers.PC);
+            ctx.registers.PC += 1;
             break;
         case ADD_REG_A16:
             ctx.operand_one = get_register_val(ctx.instruction->reg_1);
             ctx.operand_two = swap_int16(
                     join_8b_16b(
-                            read_mem(ctx.cpu.registers.PC),
-                            read_mem(ctx.cpu.registers.PC + 1)
+                            read_mem(ctx.registers.PC),
+                            read_mem(ctx.registers.PC + 1)
                     )
             );
-            ctx.cpu.registers.PC += 2;
+            ctx.registers.PC += 2;
             break;
         case ADD_NZ:
             printf("Addressing for ADD_NZ!\n");
@@ -120,46 +120,46 @@ void next_data() {
         case ADD_NZ_A16:
             ctx.operand_two = swap_int16(
                     join_8b_16b(
-                            read_mem(ctx.cpu.registers.PC),
-                            read_mem(ctx.cpu.registers.PC + 1)
+                            read_mem(ctx.registers.PC),
+                            read_mem(ctx.registers.PC + 1)
                     )
             );
-            ctx.cpu.registers.PC += 2;
+            ctx.registers.PC += 2;
             break;
         case ADD_A16:
             ctx.operand_one = swap_int16(
                     join_8b_16b(
-                            read_mem(ctx.cpu.registers.PC),
-                            read_mem(ctx.cpu.registers.PC + 1)
+                            read_mem(ctx.registers.PC),
+                            read_mem(ctx.registers.PC + 1)
                     )
             );
-            ctx.cpu.registers.PC += 2;
+            ctx.registers.PC += 2;
             break;
         case ADD_A16_REG:
             ctx.operand_one = swap_int16(
                     join_8b_16b(
-                            read_mem(ctx.cpu.registers.PC),
-                            read_mem(ctx.cpu.registers.PC + 1)
+                            read_mem(ctx.registers.PC),
+                            read_mem(ctx.registers.PC + 1)
                     )
             );
-            ctx.cpu.registers.PC += 2;
+            ctx.registers.PC += 2;
             ctx.operand_two = get_register_val(ctx.instruction->reg_1);
             break;
         case ADD_Z_A16:
             ctx.operand_two = swap_int16(
                     join_8b_16b(
-                            read_mem(ctx.cpu.registers.PC),
-                            read_mem(ctx.cpu.registers.PC + 1)
+                            read_mem(ctx.registers.PC),
+                            read_mem(ctx.registers.PC + 1)
                     )
             );
-            ctx.cpu.registers.PC += 2;
+            ctx.registers.PC += 2;
             break;
         case ADD_Z:
             printf("Addressing for ADD_Z!\n");
             break;
         case ADD_N8:
-            ctx.operand_one = read_mem(ctx.cpu.registers.PC);
-            ctx.cpu.registers.PC += 1;
+            ctx.operand_one = read_mem(ctx.registers.PC);
+            ctx.registers.PC += 1;
             break;
         case ADD_E8:
             printf("Addressing for ADD_E8!\n");
@@ -172,10 +172,10 @@ void next_data() {
 void print_cpu_state() {
     printf("\nOp: (%u): %02x\n", ctx.instruction->type, ctx.opcode);
     printf("Registers:\n[ A: %x; B: %x; C: %x ]\n[ D: %x; E: %x; F: %x ]\n[ H: %x; L: %x;]\n",
-           ctx.cpu.registers.A, ctx.cpu.registers.B, ctx.cpu.registers.C,
-           ctx.cpu.registers.D, ctx.cpu.registers.F, ctx.cpu.registers.E,
-           ctx.cpu.registers.H, ctx.cpu.registers.L);
-    printf("SP: %i, PC: %i\n", ctx.cpu.registers.SP, ctx.cpu.registers.PC);
+           ctx.registers.A, ctx.registers.B, ctx.registers.C,
+           ctx.registers.D, ctx.registers.F, ctx.registers.E,
+           ctx.registers.H, ctx.registers.L);
+    printf("SP: %i, PC: %i\n", ctx.registers.SP, ctx.registers.PC);
 }
 
 void execute() {
