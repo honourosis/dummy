@@ -29,3 +29,5 @@ void cpu_step();
 void set_8bit_register_val(Register reg, uint8_t val);
 
 uint16_t get_register_val(Register reg);
+
+void init_cpu();

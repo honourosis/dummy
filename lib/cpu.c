@@ -4,6 +4,43 @@
 
 CPU_context ctx = {};
 
+char *instruction_names[34] = {
+        "NOP",
+        "LD",
+        "INC",
+        "RLCA",
+        "ADD",
+        "DEC",
+        "RRCA",
+        "STOP",
+        "RLA",
+        "JR",
+        "RRA",
+        "DAA",
+        "CPL",
+        "SCF",
+        "CCF",
+        "HALT",
+        "SUB",
+        "SBC",
+        "AND",
+        "XOR",
+        "OR",
+        "CP",
+        "RET",
+        "POP",
+        "JP",
+        "CALL",
+        "PUSH",
+        "RST",
+        "PREFIX",
+        "LDH",
+        "ADC",
+        "RETI",
+        "DI",
+        "EI"
+};
+
 void set_8bit_register_val(Register reg, uint8_t val) {
     switch (reg) {
         case REG_A:
@@ -170,12 +207,17 @@ void next_data() {
 }
 
 void print_cpu_state() {
-    printf("\nOp: (%u): %02x\n", ctx.instruction->type, ctx.opcode);
-    printf("Registers:\n[ A: %x; B: %x; C: %x ]\n[ D: %x; E: %x; F: %x ]\n[ H: %x; L: %x;]\n",
+    printf("\nInstruction: %s: (%02x %02x %02x) \n",
+           instruction_names[ctx.instruction->type],
+           ctx.opcode,
+           read_mem(ctx.registers.PC),
+           read_mem(ctx.registers.PC + 1)
+    );
+    printf("Registers:\n[ A: %02x; B: %02x; C: %02x ]\n[ D: %02x; E: %02x; F: %02x ]\n[ H: %02x; L: %02x;]\n",
            ctx.registers.A, ctx.registers.B, ctx.registers.C,
            ctx.registers.D, ctx.registers.F, ctx.registers.E,
            ctx.registers.H, ctx.registers.L);
-    printf("SP: %i, PC: %i\n", ctx.registers.SP, ctx.registers.PC);
+    printf("SP: (%02x), PC: (%02x)\n", ctx.registers.SP, ctx.registers.PC);
 }
 
 void execute() {
@@ -190,4 +232,8 @@ void cpu_step() {
     next_instruction();
     next_data();
     execute();
+}
+
+void init_cpu() {
+    ctx.registers.PC = 0x100;
 }
