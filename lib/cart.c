@@ -60,3 +60,7 @@ bool read_cartridge(char *romPath) {
 uint8_t lookup_card_data(uint16_t address) {
     return cartridge.rom[address];
 }
+
+uint8_t write_card_data(uint16_t address, uint8_t value) {
+    cartridge.rom[address] = value;
+}

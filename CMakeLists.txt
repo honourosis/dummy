@@ -20,4 +20,6 @@ add_executable(dummy app/main.c
         lib/common.c
         lib/executor.c
         lib/executor.h
+        lib/ram.c
+        lib/ram.h
 )

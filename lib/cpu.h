@@ -18,15 +18,15 @@ typedef struct {
 
 typedef struct {
     uint8_t opcode;
-    uint16_t operand_one;
-    uint16_t operand_two;
+    uint16_t data;
+    uint16_t data_destination;
     Instruction *instruction;
     Registers registers;
 } CPU_context;
 
 void cpu_step();
 
-void set_8bit_register_val(Register reg, uint8_t val);
+void set_register_val(Register reg, uint16_t val);
 
 uint16_t get_register_val(Register reg);
 

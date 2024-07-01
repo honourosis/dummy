@@ -50,29 +50,32 @@ typedef enum {
 } Type;
 
 typedef enum {
-    COND_NZ,
+    COND_NONE,
     COND_Z,
-    COND_NC,
-    COND_C
+    COND_NZ,
+    COND_C,
+    COND_NC
 } Condition;
 
 typedef enum {
     ADD_INP, // in place
     ADD_REG,
+    ADD_MEM,
     ADD_REG_REG,
-    ADD_REG_N8,
-    ADD_REG_N16,
-    ADD_REG_A8,
-    ADD_ADDR,
-    ADD_REG_A16,
-    ADD_NZ,
-    ADD_NZ_A16,
-    ADD_A16,
-    ADD_A16_REG,
-    ADD_Z_A16,
-    ADD_Z,
-    ADD_N8,
-    ADD_E8
+    ADD_MEM_REG,
+    ADD_REG_MEM,
+    ADD_REG_N8, // 8-bit data
+    ADD_REG_N16, // little-endian 16-bit data
+    ADD_HLI_REG, // increment HL afterwards
+    ADD_REG_HLI,
+    ADD_HLD_REG,
+    ADD_REG_HLD,
+    ADD_REG_A16, // little-endian 16-bit address
+    ADD_A16, // little-endian 16-bit address
+    ADD_A8_REG,
+    ADD_A16_REG, // little-endian 16-bit address
+    ADD_N8, // 8-bit data
+    ADD_E8 // 8-bit signed
 } Addressing;
 
 typedef enum {
@@ -84,6 +87,7 @@ typedef enum {
 
 typedef enum {
     //r8
+    REG_NONE,
     REG_A,
     REG_B,
     REG_C,

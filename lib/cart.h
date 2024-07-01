@@ -30,3 +30,5 @@ void print_header(Header *header);
 
 uint8_t lookup_card_data(uint16_t address);
 
+uint8_t write_card_data(uint16_t address, uint8_t value);
+
